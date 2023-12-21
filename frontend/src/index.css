@@ -1,0 +1,33 @@
+:root {
+  --main-font: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --main-line-height: 1.5;
+  --main-font-weight: 400;
+
+  --text-color: #333; /* Cambiado a un tono más oscuro para mejorar la legibilidad */
+  --background-color: #f4f4f4; /* Fondo gris claro para mejorar el contraste */
+
+  --link-text-decoration: none; /* Cambiado a "none" para quitar subrayado predeterminado */
+
+  font-family: var(--main-font);
+  line-height: var(--main-line-height);
+  font-weight: var(--main-font-weight);
+
+  color: var(--text-color);
+  background-color: var(--background-color);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  text-decoration: var(--link-text-decoration);
+  color: #3498db; /* Color azul para los enlaces */
+  transition: color 0.3s ease; /* Efecto de transición para el color del enlace */
+}
+
+a:hover {
+  color: #2980b9; /* Cambio de color al pasar el ratón */
+}

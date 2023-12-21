@@ -1,0 +1,114 @@
+/* PostulationPending.css */
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .postulations-pending-wrapper {
+        padding: 20px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+    }
+    
+    .postulations-pending-wrapper h2 {
+        color: white; /* Cambia el color del texto a blanco */
+    }
+    
+    .postulations-pending-wrapper ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .postulations-pending-wrapper li {
+        margin-bottom: 10px;
+    }
+    
+    .postulations-pending-wrapper a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+    }
+    
+    .postulations-pending-wrapper a:hover {
+        text-decoration: underline;
+    }
+/* Root.css */
+
+/* Estilos generales del contenedor principal */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  background-color: #fff; /* Fondo del contenedor principal */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos del contenedor de información del usuario */
+.user-info-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+  background-color: #3498db; /* Fondo del contenedor de información del usuario */
+  color: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Estilos de la información del usuario */
+.user-info {
+  font-size: 16px;
+}
+
+/* Estilos generales para los botones */
+.logout-btn,
+.create-application-btn,
+.create-reserve-btn,
+.create-renewer-btn,
+.view-pending-btn {
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  color: #fff; /* Agregado para asegurar el color del texto en los botones */
+}
+
+/* Estilos específicos para el botón de Cerrar sesión */
+.logout-btn {
+  background-color: #c0392b; /* Rojo */
+}
+
+/* Estilos específicos para los botones de Crear */
+.create-application-btn,
+.create-reserve-btn,
+.create-renewer-btn {
+  background-color: #2ecc71; /* Verde */
+}
+
+/* Estilos específicos para el botón de Ver pendientes (solo para admin) */
+.view-pending-btn {
+  background-color: #e74c3c; /* Rojo oscuro */
+}
+
+/* Estilos al pasar el mouse sobre los botones */
+.logout-btn:hover,
+.create-application-btn:hover,
+.create-reserve-btn:hover,
+.create-renewer-btn:hover,
+.view-pending-btn:hover {
+  opacity: 0.9;
+}
+
+/* Estilos para el contenedor de botones secundarios */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

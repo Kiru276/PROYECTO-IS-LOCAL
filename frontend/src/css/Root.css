@@ -1,0 +1,77 @@
+/* Root.css */
+
+/* Estilos generales del contenedor principal */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  background-color: #ffffffb2;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Añadimos un fondo al contenedor principal para que sea del mismo color que el fondo general */
+body {
+  background-color: #fff;
+}
+
+/* Estilos del contenedor de información del usuario */
+.user-info-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+  background-color: #3498db;
+  color: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Estilos del texto en el contenedor de información del usuario */
+.user-info {
+  font-size: 16px;
+}
+
+/* Estilos generales para los botones */
+.button {
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  color: #fff; /* Color del texto en los botones */
+}
+
+/* Estilos específicos para cada botón */
+.send-email-btn {
+  background-color: #8e44ad; /* Morado */
+}
+
+.logout-btn {
+  background-color: #c0392b; /* Rojo */
+}
+
+.create-application-btn {
+  background-color: #2ecc71; /* Verde */
+}
+
+.create-reserve-btn {
+  background-color: #f39c12; /* Amarillo */
+}
+
+.create-renewer-btn {
+  background-color: #0067ce; /* Azul */
+}
+
+.view-pending-btn {
+  background-color: #e74c3c; /* Rojo oscuro */
+}
+
+/* Estilos al pasar el mouse sobre los botones */
+.button:hover {
+  opacity: 0.9;
+}
