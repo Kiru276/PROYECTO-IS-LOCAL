@@ -17,12 +17,14 @@ function PageReserve3() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  if (!user) {
+    // Manejar caso donde el usuario no está autenticado
+    return <p>Usuario no autenticado</p>;
+  }
+
   const [formData, setFormData] = useState({
     fechaReserva: '',
     horaReserva: '',
-    // Utiliza la solicitanteId del usuario autenticado
-    solicitanteId: user ? user._id : '',
-    tipo: 'oftalmologico', // Cambia el tipo de reserva a 'oftalmologico'
   });
 
   const handleChange = (e) => {
@@ -34,11 +36,24 @@ function PageReserve3() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      // Utiliza la función createReserve1 del servicio
-      const response = await createReserve3(formData);
+  // Validar que los campos estén completos
+  if (!formData.fechaReserva || !formData.horaReserva) {
+    Swal.fire({
+      title: 'Atención',
+      text: 'Por favor, complete todos los campos del formulario',
+      icon: 'warning',
+    });
+    return;
+  }
+
+  try {
+    // Utiliza la función createReserve1 del servicio
+    const response = await createReserve3({
+      ...formData,
+      solicitanteId: user ? user.id : '',
+    });
 
       if (response.status === 201) {
         Swal.fire({
@@ -93,11 +108,6 @@ function PageReserve3() {
         </label>
 
         <br />
-        
-        <label>
-          Solicitante ID:
-          <input type="text" name="solicitanteId" value={formData.solicitanteId} onChange={handleChange} />
-        </label>
 
         <br />
         <br />

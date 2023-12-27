@@ -49,3 +49,20 @@
     background-color: #2980b9;
   }
   
+  .reserve-container {
+    max-width: 800px; /* Ajusta el ancho máximo del contenedor según tus preferencias */
+    margin: 0 auto; /* Centra el contenedor en la pantalla */
+    padding: 20px; /* Añade un espacio de relleno alrededor del contenedor */
+  }
+  
+  .reserves-list {
+    max-height: 400px; /* Limita la altura de la lista de reservas */
+    overflow-y: auto; /* Agrega desplazamiento vertical si la lista supera la altura máxima */
+  }
+  
+  .reserve-item {
+    margin-bottom: 10px; /* Añade un espacio entre cada reserva */
+  }
+  
+  /* Agrega otros estilos según sea necesario */
+  

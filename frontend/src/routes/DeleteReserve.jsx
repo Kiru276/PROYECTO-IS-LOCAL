@@ -1,65 +1,84 @@
-import React, { useState } from 'react';
-import { deleteReserve } from '../services/reserve.service';
+import React, { useState, useEffect } from 'react';
+import { getAllReserves, deleteReserve } from '../services/reserve.service';
 import Swal from 'sweetalert2';
 import '../css/reserveStyles.css';
 
-function YourComponent() {
+function DeleteReserve() {
+  const [reserves, setReserves] = useState([]);
   const [reserveIdToDelete, setReserveIdToDelete] = useState('');
 
-  const handleDeleteReserve = async () => {
-    try {
-      const response = await deleteReserve(reserveIdToDelete);
-      
-      if (response.status === 200) {
-        Swal.fire({
-          title: "Proceso exitoso",
-          text: "Reserva eliminada con éxito",
-          icon: "success"
-        });
-        // Realiza cualquier acción adicional necesaria después de la eliminación
-      } else if (response.status === 400) {
-        Swal.fire({
-          title: "Reservas no encontradas",
-          text: "Error al obtener reservas: Usuario no encontrado.",
-          icon: "warning"
-        });;
-      } else if (response.status === 404) {
-        Swal.fire({
-          title: "Reservas no encontradas",
-          text: "Error al obtener reservas: Usuario no encontrado.",
-          icon: "warning"
-        });
-      } else if (response.status === 500) {
-        Swal.fire({
-          title: "ERROR",
-          text: "Error interno del servidor al obtener reservas.",
-          icon: "error"
-        });
-      } else {
-        console.error('Error al eliminar la reserva:', response.status, response.statusText);
-        // Maneja otros casos de error según tus necesidades
+  useEffect(() => {
+    const fetchReserves = async () => {
+      try {
+        const response = await getAllReserves();
+        setReserves(response.data);
+      } catch (error) {
+        console.error('Error al obtener las reservas:', error);
       }
-    } catch (error) {
-      console.error('Error inesperado:', error);
-      // Maneja el error de acuerdo a tus necesidades
+    };
+
+    fetchReserves();
+  }, []);
+
+  const handleDeleteReserve = async (id) => {
+    // Mostrar la ventana de confirmación
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará la reserva permanentemente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    });
+
+    // Si el usuario confirma la eliminación, proceder con la llamada a la API
+    if (result.isConfirmed) {
+      try {
+        const response = await deleteReserve(id);
+
+        if (response.status === 200) {
+          Swal.fire({
+            title: 'Proceso exitoso',
+            text: 'Reserva eliminada con éxito',
+            icon: 'success',
+          });
+          // Actualiza la lista de reservas después de la eliminación
+          setReserves((prevReserves) => prevReserves.filter((reserve) => reserve._id !== id));
+        } else {
+          Swal.fire({
+            title: 'Error al eliminar reserva',
+            text: 'Ha ocurrido un error al eliminar la reserva',
+            icon: 'error',
+          });
+        }
+      } catch (error) {
+        console.error('Error inesperado:', error);
+        // Maneja el error de acuerdo a tus necesidades
+      }
     }
   };
 
   return (
     <div className="reserve-container">
-      <label>
-        ID de la Reserva a Eliminar:
-        <input
-          type="text"
-          value={reserveIdToDelete}
-          onChange={(e) => setReserveIdToDelete(e.target.value)}
-        />
-      </label>
-
-      <button onClick={handleDeleteReserve} className="reserve-submit">
-        Eliminar Reserva
-      </button>
+      <h2>Reservas disponibles a eliminar</h2>
+      <div className="reserves-list">
+        {reserves.map((reserve) => (
+          <div key={reserve._id} className="reserve-item">
+            <p>RUT solicitante: {reserve.solicitanteId.rut}</p>
+            <p>Fecha de Reserva: {new Date(reserve.fechaReserva).toLocaleDateString()}</p>
+            <p>Hora de Reserva: {reserve.horaReserva}</p>
+            <p>Tipo de reserva: {reserve.tipoPrueba}</p>
+            <button onClick={() => handleDeleteReserve(reserve._id)} className="delete-btn">
+              Eliminar Reserva
+            </button>
+            <p>---------------------------------------------------------------------------------</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-export default YourComponent;
+
+export default DeleteReserve;
