@@ -64,6 +64,7 @@ function DeleteReserve() {
     <div className="reserve-container">
       <h2>Reservas disponibles a eliminar</h2>
       <div className="reserves-list">
+      <p>---------------------------------------------------------------------------------------------------------------------------------</p>
         {reserves.map((reserve) => (
           <div key={reserve._id} className="reserve-item">
             <p>RUT solicitante: {reserve.solicitanteId.rut}</p>
@@ -73,7 +74,7 @@ function DeleteReserve() {
             <button onClick={() => handleDeleteReserve(reserve._id)} className="delete-btn">
               Eliminar Reserva
             </button>
-            <p>---------------------------------------------------------------------------------</p>
+            <p>---------------------------------------------------------------------------------------------------------------------------</p>
           </div>
         ))}
       </div>

@@ -102,7 +102,7 @@ function PageRoot() {
             <FaSignInAlt  /> Crear reserva práctica
           </button>
           <button className="create-reserve-btn" onClick={handleGetReserveRut}>
-            <FaEye  /> Buscar reserva por RUT
+            <FaEye  /> Ver última reserva válida
           </button>
           <button className="create-renewer-btn" onClick={handleCreateRenewer}>
             <FaSignInAlt  /> Crear renovación
@@ -113,7 +113,7 @@ function PageRoot() {
               <FaEye /> Ver reservas
               </button>
               <button className="create-reserve-btn" onClick={handleGetReserveId}>
-              <FaEye  /> Buscar reserva por ID
+              <FaEye  /> Buscar reserva por RUT
               </button>
               
               <button className="create-reserve-btn" onClick={handleDeleteReserve}>

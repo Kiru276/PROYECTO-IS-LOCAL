@@ -9,6 +9,7 @@ function ViewReserve() {
   console.log('Valor de user:', user);
 
   const [reserves, setReserves] = useState([]);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     const fetchReserves = async () => {
@@ -34,11 +35,27 @@ function ViewReserve() {
     return restOfRut + '-' + lastChar;
   }
 
+  // Filtrar las reservas según el texto de búsqueda
+  const filteredReserves = reserves.filter((reserve) => {
+    const searchTerms = searchText.toLowerCase();
+    const reserveInfo = `${reserve.fechaReserva} ${reserve.horaReserva} ${reserve.tipoPrueba} ${reserve.solicitanteId.rut} ${reserve.solicitanteId.nombre} ${reserve.solicitanteId.apellido} ${reserve.solicitanteId.email} ${reserve.solicitanteId.telefono}`.toLowerCase();
+    return reserveInfo.includes(searchTerms);
+  });
+
   return (
     <div>
       <h2>Historial de datos relevantes de reservas </h2>
+      <label>
+        Buscar reservas:
+        <input
+          type="text"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+      </label>
       <br />
-      {reserves.map((reserve) => (
+      <p>---------------------------------------------------------------------------------------------------------------------------------</p>
+      {filteredReserves.map((reserve) => (
         <div key={reserve.id}>
           <p>Fecha de Reserva: {new Date(reserve.fechaReserva).toLocaleDateString()}</p>
           <p>Hora de Reserva: {reserve.horaReserva}</p>
