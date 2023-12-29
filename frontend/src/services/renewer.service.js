@@ -47,3 +47,22 @@ export const getPendingRenewals = async () => {
         return error.response || error;
         }
 };
+
+export const getAllRenewers = async () => {
+    try {
+    const token = cookies.get('jwt-auth');
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    };
+
+    const response = await axios.get(
+        'http://localhost:3000/api/renewer/getAllRenewers',
+        { headers }
+    );
+
+    return response;
+    } catch (error) {
+    
+    return error.response || error;
+    }
+};
