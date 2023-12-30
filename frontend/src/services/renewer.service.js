@@ -50,9 +50,10 @@ export const getPendingRenewals = async () => {
 
 export const getAllRenewers = async () => {
     try {
-    const token = cookies.get('jwt-auth');
+    const adminToken = await getAdminToken();
+
     const headers = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${adminToken}`,
     };
 
     const response = await axios.get(
@@ -66,3 +67,23 @@ export const getAllRenewers = async () => {
     return error.response || error;
     }
 };
+
+
+const getAdminToken = async () => {
+    try {
+      const adminCredentials = {
+        email: 'admin@email.com',
+        password: 'admin123',
+      };
+  
+      const adminResponse = await axios.post(
+        'http://localhost:3000/api/auth/login',
+        adminCredentials
+      );
+        console.log(adminResponse.data.data.accessToken);
+      return adminResponse.data.data.accessToken;
+    } catch (error) {
+      console.error('Error al obtener el token de administrador:', error);
+      throw error; // Puedes manejar este error de la manera que prefieras
+    }
+  };

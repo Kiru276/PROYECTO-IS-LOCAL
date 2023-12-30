@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { createReserve3 } from '../services/reserve.service.js';
+import { getAllRenewers } from '../services/renewer.service.js';
 import Swal from 'sweetalert2';
 import '../css/reserveStyles.css';
 
@@ -22,6 +23,33 @@ function PageReserve3() {
     return <p>Usuario no autenticado</p>;
   }
 
+  const [renewer, setRenewer] = useState([]);
+
+  useEffect(() => {
+    const fetchRenewer = async () => {
+      try {
+        const response = await getAllRenewers();
+  
+        // Encuentra la postulación correspondiente al usuario actual
+        const userRenewer = response.data.find(
+          (item) => item.solicitanteId._id === user.id
+        );
+  
+        if (userRenewer) {
+          console.log('Renovacion encontrada');
+          setRenewer(userRenewer);
+        } else {
+          console.log('Renovacion no encontrada para el usuario con ID');
+        }
+      } catch (error) {
+        console.error('Error al obtener las renovaciones:', error);
+      }
+    };
+  
+    fetchRenewer();
+  }, [user]);
+  
+
   const [formData, setFormData] = useState({
     fechaReserva: '',
     horaReserva: '',
@@ -36,19 +64,25 @@ function PageReserve3() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Validar que los campos estén completos
-  if (!formData.fechaReserva || !formData.horaReserva) {
-    Swal.fire({
-      title: 'Atención',
-      text: 'Por favor, complete todos los campos del formulario',
-      icon: 'warning',
-    });
-    return;
-  }
+    // Validar que los campos estén completos
+    if (!formData.fechaReserva || !formData.horaReserva) {
+      Swal.fire({
+        title: 'Atención',
+        text: 'Por favor, complete todos los campos del formulario',
+        icon: 'warning',
+      });
+      return;
+    }
 
   try {
+    console.log('Renovacion actual en el estado');
+  
+      // Verificar si existe una postulación y su estado es "Aprobado"
+    if (renewer && renewer.estadoTramite === 'Aceptado') {
+      console.log('La renovacion está aprobada, procediendo a crear la reserva...');
+
     // Utiliza la función createReserve1 del servicio
     const response = await createReserve3({
       ...formData,
@@ -82,6 +116,13 @@ function PageReserve3() {
           icon: "error"
         });
       }
+    } else {
+      Swal.fire({
+        title: 'Atención',
+        text: 'No puedes realizar reservas si tu renovacion no está aprobada.',
+        icon: 'warning',
+      });
+    }
     } catch (error) {
       Swal.fire({
         title: "ERROR",

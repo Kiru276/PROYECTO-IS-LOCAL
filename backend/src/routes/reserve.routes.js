@@ -13,7 +13,7 @@ const authenticationMiddleware = require("../middlewares/authentication.middlewa
 router.use(authenticationMiddleware);
 
 router.get("/getAllReserves", isAdmin, reserveController.getAllReserves);
-router.get("/getAllReservesByUserId/:userId", isAdmin, reserveController.getAllReservesByUserId);
+router.get("/getAllReservesByUserId/:userId", reserveController.getAllReservesByUserId);
 router.get("/getAllReservesByUserRut/:rut", reserveController.getAllReservesByUserRut);
 router.post("/createReserve1", reserveController.createReserveTeorical);
 router.post("/createReserve2", reserveController.createReservePsychotechnical);
