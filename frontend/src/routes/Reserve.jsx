@@ -24,17 +24,18 @@ function PageReserve() {
   }
 
   const [postulation, setPostulation] = useState([]);
+  const [loading, setLoading] = useState(true); // Nuevo estado para indicar si está cargando
 
   useEffect(() => {
     const fetchPostulation = async () => {
       try {
         const response = await getAllPostulation();
-  
+
         // Encuentra la postulación correspondiente al usuario actual
         const userPostulation = response.data.find(
           (item) => item.solicitanteId._id === user.id
         );
-  
+
         if (userPostulation) {
           console.log('Postulación encontrada');
           setPostulation(userPostulation);
@@ -43,12 +44,13 @@ function PageReserve() {
         }
       } catch (error) {
         console.error('Error al obtener las postulaciones:', error);
+      } finally {
+        setLoading(false); // Establecer loading en falso cuando la carga esté completa
       }
     };
-  
+
     fetchPostulation();
   }, [user]);
-  
 
   const [formData, setFormData] = useState({
     fechaReserva: '',
@@ -78,11 +80,11 @@ function PageReserve() {
 
     try {
       console.log('Postulación actual en el estado');
-  
+
       // Verificar si existe una postulación y su estado es "Aprobado"
       if (postulation && postulation.estadoReserva === 'Aceptado') {
         console.log('La postulación está aprobada, procediendo a crear la reserva...');
-  
+
         // Utiliza la función createReserve1 del servicio
         const response = await createReserve1({
           ...formData,
@@ -134,38 +136,42 @@ function PageReserve() {
   return (
     <div className="reserve-container">
       <h2 className="reserve-title">Formulario de Reserva teórica</h2>
-      <form className="reserve-form" onSubmit={handleSubmit}>
-        <label>
-          Fecha de Reserva:
-          <input
-            type="date"
-            name="fechaReserva"
-            value={formData.fechaReserva}
-            onChange={handleChange}
-          />
-        </label>
+      {loading ? (
+        <p>Comprobando documentación...</p>
+      ) : (
+        <form className="reserve-form" onSubmit={handleSubmit}>
+          <label>
+            Fecha de Reserva:
+            <input
+              type="date"
+              name="fechaReserva"
+              value={formData.fechaReserva}
+              onChange={handleChange}
+            />
+          </label>
 
-        <br />
+          <br />
 
-        <label>
-          Hora de Reserva:
-          <input
-            type="time"
-            name="horaReserva"
-            value={formData.horaReserva}
-            onChange={handleChange}
-          />
-        </label>
+          <label>
+            Hora de Reserva:
+            <input
+              type="time"
+              name="horaReserva"
+              value={formData.horaReserva}
+              onChange={handleChange}
+            />
+          </label>
 
-        <br />
+          <br />
 
-        <br />
-        <br />
+          <br />
+          <br />
 
-        <button type="submit" className="reserve-submit">
-          Crear Reserva
-        </button>
-      </form>
+          <button type="submit" className="reserve-submit">
+            Crear Reserva
+          </button>
+        </form>
+      )}
       <Outlet />
     </div>
   );

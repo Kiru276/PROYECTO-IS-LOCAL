@@ -71,19 +71,18 @@ export const getAllRenewers = async () => {
 
 const getAdminToken = async () => {
     try {
-      const adminCredentials = {
+        const adminCredentials = {
         email: 'admin@email.com',
         password: 'admin123',
-      };
-  
-      const adminResponse = await axios.post(
+        };
+
+        const adminResponse = await axios.post(
         'http://localhost:3000/api/auth/login',
         adminCredentials
-      );
-        console.log(adminResponse.data.data.accessToken);
-      return adminResponse.data.data.accessToken;
+    );
+        return adminResponse.data.data.accessToken;
     } catch (error) {
-      console.error('Error al obtener el token de administrador:', error);
-      throw error; // Puedes manejar este error de la manera que prefieras
+        console.error('Error al obtener el token de administrador:', error);
+        throw error; // Puedes manejar este error de la manera que prefieras
     }
-  };
+};

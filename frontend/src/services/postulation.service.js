@@ -75,39 +75,36 @@ export const getPostulationByID = async (postId) => {
 export const getAllPostulation = async () => {
     try {
       const adminToken = await getAdminToken(); // Obtener el token de administrador
-  
-      const headers = {
+
+        const headers = {
         Authorization: `Bearer ${adminToken}`,
-      };
-  
-      const response = await axios.get(
+    };
+
+        const response = await axios.get(
         'http://localhost:3000/api/postulation/getAllPostulations',
         { headers }
-      );
-  
-      return response;
+    );
+    return response;
     } catch (error) {
       // Si hay un error, devolver la respuesta del error
-      return error.response || error;
+    return error.response || error;
     }
-  };
+};
 
 
 const getAdminToken = async () => {
     try {
-      const adminCredentials = {
+        const adminCredentials = {
         email: 'admin@email.com',
         password: 'admin123',
-      };
-  
-      const adminResponse = await axios.post(
+    };
+        const adminResponse = await axios.post(
         'http://localhost:3000/api/auth/login',
         adminCredentials
-      );
-        console.log(adminResponse.data.data.accessToken);
-      return adminResponse.data.data.accessToken;
+    );
+        return adminResponse.data.data.accessToken;
     } catch (error) {
-      console.error('Error al obtener el token de administrador:', error);
+        console.error('Error al obtener el token de administrador:', error);
       throw error; // Puedes manejar este error de la manera que prefieras
     }
-  };
+};

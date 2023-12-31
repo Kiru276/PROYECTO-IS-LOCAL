@@ -24,17 +24,18 @@ function PageReserve3() {
   }
 
   const [renewer, setRenewer] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRenewer = async () => {
       try {
         const response = await getAllRenewers();
-  
-        // Encuentra la postulación correspondiente al usuario actual
+
+        // Encuentra la renovación correspondiente al usuario actual
         const userRenewer = response.data.find(
           (item) => item.solicitanteId._id === user.id
         );
-  
+
         if (userRenewer) {
           console.log('Renovacion encontrada');
           setRenewer(userRenewer);
@@ -43,12 +44,13 @@ function PageReserve3() {
         }
       } catch (error) {
         console.error('Error al obtener las renovaciones:', error);
+      } finally {
+        setLoading(false);
       }
     };
-  
+
     fetchRenewer();
   }, [user]);
-  
 
   const [formData, setFormData] = useState({
     fechaReserva: '',
@@ -76,58 +78,57 @@ function PageReserve3() {
       return;
     }
 
-  try {
-    console.log('Renovacion actual en el estado');
-  
-      // Verificar si existe una postulación y su estado es "Aprobado"
-    if (renewer && renewer.estadoTramite === 'Aceptado') {
-      console.log('La renovacion está aprobada, procediendo a crear la reserva...');
+    try {
+      console.log('Renovacion actual en el estado');
 
-    // Utiliza la función createReserve1 del servicio
-    const response = await createReserve3({
-      ...formData,
-      solicitanteId: user ? user.id : '',
-    });
+      // Verificar si existe una renovación y su estado es "Aprobado"
+      if (renewer && renewer.estadoTramite === 'Aceptado') {
+        console.log('La renovacion está aprobada, procediendo a crear la reserva...');
 
-      if (response.status === 201) {
-        Swal.fire({
-          title: "Todo correcto",
-          text: "La reserva se creó correctamente",
-          icon: "success"
+        // Utiliza la función createReserve3 del servicio
+        const response = await createReserve3({
+          ...formData,
+          solicitanteId: user ? user.id : '',
         });
-      } else if (response.status === 400) {
-        Swal.fire({
-          title: "Atencion",
-          text: "Datos ingresados incorrectos, ingrese los datos de forma correcta",
-          icon: "warning"
-        });
-    
-      } else if (response.status === 500) {
-        Swal.fire({
-          title: "ERROR",
-          text: "Hubo un error interno en el servidor. Por favor, inténtalo de nuevo más tarde.",
-          icon: "error"
-        });
-    
+
+        if (response.status === 201) {
+          Swal.fire({
+            title: 'Todo correcto',
+            text: 'La reserva se creó correctamente',
+            icon: 'success',
+          });
+        } else if (response.status === 400) {
+          Swal.fire({
+            title: 'Atencion',
+            text: 'Datos ingresados incorrectos, ingrese los datos de forma correcta',
+            icon: 'warning',
+          });
+        } else if (response.status === 500) {
+          Swal.fire({
+            title: 'ERROR',
+            text:
+              'Hubo un error interno en el servidor. Por favor, inténtalo de nuevo más tarde.',
+            icon: 'error',
+          });
+        } else {
+          Swal.fire({
+            title: 'ERROR',
+            text: 'Hubo un error al enviar la reserva. Por favor, inténtalo de nuevo.',
+            icon: 'error',
+          });
+        }
       } else {
         Swal.fire({
-          title: "ERROR",
-          text: "HHubo un error al enviar la reserva. Por favor, inténtalo de nuevo.",
-          icon: "error"
+          title: 'Atención',
+          text: 'No puedes realizar reservas si tu renovacion no está aprobada.',
+          icon: 'warning',
         });
       }
-    } else {
-      Swal.fire({
-        title: 'Atención',
-        text: 'No puedes realizar reservas si tu renovacion no está aprobada.',
-        icon: 'warning',
-      });
-    }
     } catch (error) {
       Swal.fire({
-        title: "ERROR",
-        text: "Hubo un error inesperado, inténtelo más tarde.",
-        icon: "error"
+        title: 'ERROR',
+        text: 'Hubo un error inesperado, inténtelo más tarde.',
+        icon: 'error',
       });
     }
   };
@@ -135,26 +136,31 @@ function PageReserve3() {
   return (
     <div className="reserve-container">
       <h2 className="reserve-title">Formulario de Reserva oftalmológica</h2>
-      <form className="reserve-form" onSubmit={handleSubmit}>
-        <label>
-          Fecha de Reserva:
-          <input type="date" name="fechaReserva" value={formData.fechaReserva} onChange={handleChange} />
-        </label>
-        
-        <br />
+      {loading ? (
+        <p>Comprobando documentación...</p>
+      ) : (
+        <form className="reserve-form" onSubmit={handleSubmit}>
+          <label>
+            Fecha de Reserva:
+            <input type="date" name="fechaReserva" value={formData.fechaReserva} onChange={handleChange} />
+          </label>
 
-        <label>
-          Hora de Reserva:
-          <input type="time" name="horaReserva" value={formData.horaReserva} onChange={handleChange} />
-        </label>
+          <br />
 
-        <br />
+          <label>
+            Hora de Reserva:
+            <input type="time" name="horaReserva" value={formData.horaReserva} onChange={handleChange} />
+          </label>
 
-        <br />
-        <br />
+          <br />
 
-        <button type="submit" className="reserve-submit">Crear Reserva</button>
-      </form>
+          <br />
+
+          <button type="submit" className="reserve-submit">
+            Crear Reserva
+          </button>
+        </form>
+      )}
       <Outlet />
     </div>
   );

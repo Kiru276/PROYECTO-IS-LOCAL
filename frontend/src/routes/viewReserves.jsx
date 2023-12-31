@@ -6,7 +6,6 @@ import { AuthProvider, useAuth } from '../context/AuthContext';
 function ViewReserve() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  console.log('Valor de user:', user);
 
   const [reserves, setReserves] = useState([]);
   const [searchText, setSearchText] = useState('');
