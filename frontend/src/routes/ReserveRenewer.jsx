@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { createReserve3 } from '../services/reserve.service.js';
-import { getAllPostulation } from '../services/postulation.service.js';
+import { getAllRenewers } from '../services/renewer.service.js';
 import Swal from 'sweetalert2';
 import '../css/reserveStyles.css';
 
 function Reserve3() {
-  return (
-    <AuthProvider>
-      <PageReserve3 />
-    </AuthProvider>
-  );
+    return (
+        <AuthProvider>
+            <PageReserve3 />
+        </AuthProvider>
+    );
 }
 
 function PageReserve3() {
@@ -23,33 +23,33 @@ function PageReserve3() {
     return <p>Usuario no autenticado</p>;
   }
 
-  const [postulation, setPostulation] = useState([]);
-  const [loading, setLoading] = useState(true); // Nuevo estado para indicar si está cargando
+  const [renewer, setRenewer] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPostulation = async () => {
+    const fetchRenewer = async () => {
       try {
-        const response = await getAllPostulation();
+        const response = await getAllRenewers();
 
-        // Encuentra la postulación correspondiente al usuario actual
-        const userPostulation = response.data.find(
+        // Encuentra la renovación correspondiente al usuario actual
+        const userRenewer = response.data.find(
           (item) => item.solicitanteId._id === user.id
         );
 
-        if (userPostulation) {
-          console.log('Postulación encontrada');
-          setPostulation(userPostulation);
+        if (userRenewer) {
+          console.log('Renovacion encontrada');
+          setRenewer(userRenewer);
         } else {
-          console.log('Postulación no encontrada para el usuario con ID');
+          console.log('Renovacion no encontrada para el usuario con ID');
         }
       } catch (error) {
-        console.error('Error al obtener las postulaciones:', error);
+        console.error('Error al obtener las renovaciones:', error);
       } finally {
-        setLoading(false); // Establecer loading en falso cuando la carga esté completa
+        setLoading(false);
       }
     };
 
-    fetchPostulation();
+    fetchRenewer();
   }, [user]);
 
   const [formData, setFormData] = useState({
@@ -79,11 +79,11 @@ function PageReserve3() {
     }
 
     try {
-      console.log('Postulación actual en el estado');
+      console.log('Renovacion actual en el estado');
 
-      // Verificar si existe una postulación y su estado es "Aprobado"
-      if (postulation && postulation.estadoReserva === 'Aceptado') {
-        console.log('La postulación está aprobada, procediendo a crear la reserva...');
+      // Verificar si existe una renovación y su estado es "Aprobado"
+      if (renewer && renewer.estadoTramite === 'Aceptado') {
+        console.log('La renovacion está aprobada, procediendo a crear la reserva...');
 
         // Utiliza la función createReserve3 del servicio
         const response = await createReserve3({
@@ -120,7 +120,7 @@ function PageReserve3() {
       } else {
         Swal.fire({
           title: 'Atención',
-          text: 'No puedes realizar reservas si tu postulación no está aprobada.',
+          text: 'No puedes realizar reservas si tu renovacion no está aprobada.',
           icon: 'warning',
         });
       }
@@ -135,36 +135,25 @@ function PageReserve3() {
 
   return (
     <div className="reserve-container">
-      <h2 className="reserve-title">Formulario de Reserva oftalmológica</h2>
+      <h2 className="reserve-title">Formulario de Reserva Renovación oftalmológica</h2>
       {loading ? (
         <p>Comprobando documentación...</p>
       ) : (
         <form className="reserve-form" onSubmit={handleSubmit}>
           <label>
             Fecha de Reserva:
-            <input
-              type="date"
-              name="fechaReserva"
-              value={formData.fechaReserva}
-              onChange={handleChange}
-            />
+            <input type="date" name="fechaReserva" value={formData.fechaReserva} onChange={handleChange} />
           </label>
 
           <br />
 
           <label>
             Hora de Reserva:
-            <input
-              type="time"
-              name="horaReserva"
-              value={formData.horaReserva}
-              onChange={handleChange}
-            />
+            <input type="time" name="horaReserva" value={formData.horaReserva} onChange={handleChange} />
           </label>
 
           <br />
 
-          <br />
           <br />
 
           <button type="submit" className="reserve-submit">

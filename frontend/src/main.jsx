@@ -5,6 +5,7 @@ import Reserve from './routes/Reserve.jsx';
 import Reserve2 from './routes/Reserve2.jsx';
 import Reserve3 from './routes/Reserve3.jsx';
 import Reserve4 from './routes/Reserve4.jsx';
+import ReserveRenewer from './routes/ReserveRenewer.jsx';
 import ViewReserve from './routes/viewReserves.jsx';
 import DeleteReserve from './routes/DeleteReserve.jsx';
 import ReservesByRut from './routes/GetReserveRut.jsx';
@@ -55,6 +56,11 @@ const router = createBrowserRouter([
       {
         path: '/crearReservaPractica',
         element: <Reserve4 />,
+      },
+
+      {
+        path: '/crearReservaRenovacion',
+        element: <ReserveRenewer />,
       },
 
       {

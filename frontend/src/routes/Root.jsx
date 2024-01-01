@@ -44,6 +44,10 @@ function PageRoot() {
     navigate('/crearReservaPractica');
   };
 
+  const handleCreateReserveRenewer = () => {
+    navigate('/crearReservaRenovacion');
+  };
+
   const handleViewReserve = () => {
     navigate('/VerReserva');
   };
@@ -100,6 +104,9 @@ function PageRoot() {
           </button>
           <button className="create-reserve-btn" onClick={handleCreateReservePractical}>
             <FaSignInAlt  /> Crear reserva práctica
+          </button>
+          <button className="create-reserve-btn" onClick={handleCreateReserveRenewer}>
+            <FaSignInAlt  /> Crear reserva de renovación
           </button>
           <button className="create-reserve-btn" onClick={handleGetReserveRut}>
             <FaEye  /> Ver última reserva válida
