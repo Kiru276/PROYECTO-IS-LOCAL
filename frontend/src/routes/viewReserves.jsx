@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { getAllReserves } from '../services/reserve.service.js';
 import { AuthProvider, useAuth } from '../context/AuthContext';
+import '../css/viewReserves.css';
 
 function ViewReserve() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ function ViewReserve() {
 
   const [reserves, setReserves] = useState([]);
   const [searchText, setSearchText] = useState('');
-  const [selectedReserve, setSelectedReserve] = useState(null);
+  const [selectedRut, setSelectedRut] = useState(null);
 
   useEffect(() => {
     const fetchReserves = async () => {
@@ -35,22 +36,64 @@ function ViewReserve() {
     return restOfRut + '-' + lastChar;
   }
 
+  // Organizar las reservas por RUT
+  const groupedReserves = reserves.reduce((grouped, reserve) => {
+    const rut = reserve.solicitanteId.rut;
+    if (!grouped[rut]) {
+      grouped[rut] = [];
+    }
+    grouped[rut].push(reserve);
+    return grouped;
+  }, {});
+
   // Filtrar las reservas según el texto de búsqueda
-  const filteredReserves = reserves.filter((reserve) => {
+  const filteredReserves = Object.keys(groupedReserves).filter((rut) => {
     const searchTerms = searchText.toLowerCase();
-    const reserveInfo = `${reserve.fechaReserva} ${reserve.horaReserva} ${reserve.tipoPrueba} ${reserve.solicitanteId.rut} ${reserve.solicitanteId.nombre} ${reserve.solicitanteId.apellido} ${reserve.solicitanteId.email} ${reserve.solicitanteId.telefono}`.toLowerCase();
-    return reserveInfo.includes(searchTerms);
+    return rut.includes(searchTerms);
   });
 
-  const handleShowDetails = (reserve) => {
-    setSelectedReserve(selectedReserve === reserve ? null : reserve);
+  const renderReserveDetails = (reserve) => (
+    <table>
+      <thead>
+        <tr>
+          <th>Datos de la reserva</th>
+          <th>Datos de contacto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Fecha reserva:</td>
+          <td>{new Date(reserve.fechaReserva).toLocaleDateString()}</td>
+        </tr>
+        <tr>
+          <td>Hora reserva:</td>
+          <td>{reserve.horaReserva}</td>
+        </tr>
+        <tr>
+          <td>Tipo reserva:</td>
+          <td>{reserve.tipoPrueba}</td>
+        </tr>
+        <tr>
+          <td>Correo:</td>
+          <td>{reserve.solicitanteId.email}</td>
+        </tr>
+        <tr>
+          <td>Telefono:</td>
+          <td>{reserve.solicitanteId.telefono}</td>
+        </tr>
+      </tbody>
+    </table>
+  );
+
+  const handleShowDetails = (rut) => {
+    setSelectedRut(selectedRut === rut ? null : rut);
   };
 
   return (
     <div>
       <h2>Historial de datos relevantes de reservas </h2>
       <label>
-        Buscar reservas:
+        Buscar RUT:
         <input
           type="text"
           value={searchText}
@@ -58,39 +101,43 @@ function ViewReserve() {
         />
       </label>
       <br />
-      <p>---------------------------------------------------------------------------------------------------------------------------------</p>
-      <table>
-        <thead>
-          <tr>
-            <th>RUT</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Datos de sus reservas</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredReserves.map((reserve) => (
-            <tr key={reserve.id}>
-              <td>{reserve.solicitanteId.rut}</td>
-              <td>{reserve.solicitanteId.nombre}</td>
-              <td>{reserve.solicitanteId.apellido}</td>
-              <td>
-                <button onClick={() => handleShowDetails(reserve)}>
-                  {selectedReserve === reserve ? 'Ocultar Detalles' : 'Ver Detalles'}
-                </button>
-                {selectedReserve === reserve && (
-                  <div>
-                    <h4>Datos de la reservas: </h4>
-                    <p>Fecha reserva: {new Date(reserve.fechaReserva).toLocaleDateString()}</p>
-                    <p>Hora reserva: {reserve.horaReserva}</p>
-                    <p>Tipo reserva: {reserve.tipoPrueba}</p>
-                  </div>
-                )}
-              </td>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>RUT</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Datos de sus reservas</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredReserves.map((rut) => (
+              <React.Fragment key={rut}>
+                <tr>
+                  <td>{rut}</td>
+                  <td>{groupedReserves[rut][0].solicitanteId.nombre}</td>
+                  <td>{groupedReserves[rut][0].solicitanteId.apellido}</td>
+                  <td>
+                    <button onClick={() => handleShowDetails(rut)}>
+                      {selectedRut === rut ? 'Ocultar Detalles' : 'Ver Detalles'}
+                    </button>
+                    {selectedRut === rut && (
+                      <div>
+                        {groupedReserves[rut].map((reserve) => (
+                          <React.Fragment key={reserve.id}>
+                            {renderReserveDetails(reserve)}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Puedes utilizar Outlet si estás utilizando rutas anidadas */}
       <Outlet />
