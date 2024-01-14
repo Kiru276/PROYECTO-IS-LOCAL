@@ -5,6 +5,7 @@ Mis modificaciones finales del proyecto informatico grupal realizado en la asign
 - alezcf
 - NobleBio
 - SrTimin
+- Kiru276
 
 # Pasos para ejecutar
 
